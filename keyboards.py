@@ -15,14 +15,8 @@ def tariffs_keyboard():
     ])
 
 def payment_keyboard(tariff):
-    price = {
-        "1_month": 299,
-        "3_months": 799,
-        "1_year": 1999
-    }[tariff]
-
     return InlineKeyboardMarkup([
-        [InlineKeyboardButton("🎮 Оплатить через Lolzsteam", callback_data=f"lolz_instruction_{tariff}")],
+        [InlineKeyboardButton("🎮 Оплатить через Lolzsteam", callback_data=f"pay_{tariff}")],
         [InlineKeyboardButton("🔙 Назад к тарифам", callback_data="back_to_tariffs")]
     ])
 

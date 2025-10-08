@@ -113,7 +113,7 @@ async def handle_callbacks(client: Client, callback: CallbackQuery):
         if data.startswith("tariff_"):
             tariff = data.replace("tariff_", "")
             price = config.PRICES[tariff]
-            
+
             duration = {'1_month': '30 дней', '3_months': '90 дней', '1_year': '365 дней'}[tariff]
 
             await callback.message.edit_text(
@@ -125,14 +125,14 @@ async def handle_callbacks(client: Client, callback: CallbackQuery):
                 reply_markup=payment_keyboard(tariff)
             )
 
-        elif data.startswith("lolz_instruction_"):
-            tariff = data.replace("lolz_instruction_", "")
+        elif data.startswith("pay_"):
+            tariff = data.replace("pay_", "")
             price = config.PRICES[tariff]
-            
+
             duration = {'1_month': '30 дней', '3_months': '90 дней', '1_year': '365 дней'}[tariff]
 
-            initial_balance = payment_checker.get_balance()
-            db.add_pending_payment(user_id, tariff, price, initial_balance)
+            # Исправлено: передаем только 3 параметра
+            db.add_pending_payment(user_id, tariff, price)
 
             instruction_text = f"""
 🎮 **Оплата через Lolzsteam**
@@ -173,6 +173,7 @@ async def handle_callbacks(client: Client, callback: CallbackQuery):
 
     except Exception as e:
         print(f"❌ Ошибка в обработчике колбэков: {e}")
+        await callback.answer("❌ Произошла ошибка", show_alert=True)
 
 @bot.on_message(filters.command("issue") & filters.user([9690362]))
 async def manual_issue_vpn(client: Client, message: Message):
