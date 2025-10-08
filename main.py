@@ -14,43 +14,6 @@ bot = Client(
 
 db = Database()
 
-async def send_vpn_success(user_id, tariff, vpn_link):
-    try:
-        instruction_text = f"""
-✅ **Оплата подтверждена!**
-
-🎉 **Ваш VPN доступ активирован:**
-• Тариф: {tariff.replace('_', ' ').title()}
-• Ссылка на конфиг: `{vpn_link}`
-
-📖 **Инструкция по установке:**
-
-**Для Windows:**
-1. Скачайте OpenVPN: https://openvpn.net/client/
-2. Установите программу
-3. Скачайте конфиг файл по ссылке выше
-4. Запустите OpenVPN → Импорт файла → Подключиться
-
-**Для Android:**
-1. Установите OpenVPN из Play Market
-2. Скачайте конфиг файл
-3. В приложении: Import → Import from SD card
-4. Выберите файл и нажмите Connect
-
-⚡ **Преимущества нашего VPN:**
-• Высокая скорость
-• Безлимитный трафик
-• Защита данных
-• Поддержка 24/7
-
-📞 **Поддержка:** {config.SUPPORT_ACCOUNT}
-        """
-        
-        await bot.send_message(user_id, instruction_text)
-        
-    except Exception as e:
-        print(f"Ошибка отправки VPN: {e}")
-
 @bot.on_message(filters.command("start"))
 async def start_command(client: Client, message: Message):
     user = message.from_user
