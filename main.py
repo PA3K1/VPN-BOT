@@ -4,6 +4,10 @@ import config
 from keyboards import main_keyboard, tariffs_keyboard, payment_keyboard, support_keyboard
 from database import Database
 from payment import payment_checker
+from keep_alive import keep_alive  # Добавь эту строку
+
+# Запускаем Flask сервер для поддержания активности
+keep_alive()
 
 bot = Client(
     api_id=config.API_ID,
