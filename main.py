@@ -2,6 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 import config
 from database import Database
+from yoomoney_manager import yoomoney
 
 # Инициализация бота
 bot = Client(
@@ -115,7 +116,6 @@ async def handle_callbacks(client, callback):
             tariff = data.replace("pay_yoomoney_", "")
             price = config.PRICES[tariff]
             
-            from yoomoney_manager import yoomoney
             payment_url = yoomoney.create_payment_form(price, user_id, tariff)
             
             db.add_pending_payment(user_id, tariff, price)
@@ -169,6 +169,4 @@ async def show_stats(client: Client, message: Message):
     except Exception as e:
         await message.reply(f"❌ Ошибка: {e}")
 
-if __name__ == "__main__":
-    print("🚀 VPN Bot started!")
-    bot.run()
+# НЕ добавлять bot.run() здесь!
