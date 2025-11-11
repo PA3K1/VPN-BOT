@@ -68,4 +68,4 @@ class Database:
     def get_all_users(self):
         cursor = self.conn.cursor()
         cursor.execute('SELECT COUNT(*) FROM users')
-        return cursor.fetchone()[0]м
+        return cursor.fetchone()[0]
