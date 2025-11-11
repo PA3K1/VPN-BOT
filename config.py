@@ -1,17 +1,10 @@
-import os
+API_ID = 26602142
+API_HASH = '99131f721c2b4b5e214e201bc02a6b17'
+BOT_TOKEN = '8405506760:AAF7kkadB2quVcGQp0yRCOTQ-611GklzWf8'
 
-API_ID = int(os.environ.get("API_ID", 26602142))
-API_HASH = os.environ.get("API_HASH", '99131f721c2b4b5e214e201bc02a6b17')
-BOT_TOKEN = os.environ.get("BOT_TOKEN", '8405506760:AAF7kkadB2quVcGQp0yRCOTQ-611GklzWf8')
-
-# ЮMoney настройки
 YOOMONEY_WALLET = "4100119406790630"
 BOT_USERNAME = "SnowBall_VPN_Bot"
 
-# DonationAlerts
-DONATION_ALERTS_PAGE = "https://www.donationalerts.com/r/pazk"
-
-# Тарифы
 PRICES = {
     "1_month": 199,
     "3_months": 499,
