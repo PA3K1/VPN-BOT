@@ -2,7 +2,6 @@ import sqlite3
 from datetime import datetime, timedelta
 import os
 
-
 class Database:
     def __init__(self):
         self.conn = sqlite3.connect('vpn_bot.db', check_same_thread=False)

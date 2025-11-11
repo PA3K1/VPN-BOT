@@ -7,8 +7,26 @@ from donationalerts_manager import donationalerts
 import asyncio
 import sys
 import signal
+from flask import Flask
+import threading
+import os
 
-# Инициализация
+# Инициализация Flask для веб-сервера
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "✅ VPN Telegram Bot is running!"
+
+@app.route('/health')
+def health():
+    return "🟢 Bot is healthy"
+
+def run_flask():
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
+
+# Инициализация бота
 bot = Client(
     api_id=config.API_ID,
     api_hash=config.API_HASH,
@@ -18,16 +36,13 @@ bot = Client(
 
 db = Database()
 
-
 # Обработчик остановки для стабильной работы
 def signal_handler(signum, frame):
     print("🔴 Получен сигнал остановки...")
     sys.exit(0)
 
-
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
-
 
 # Клавиатуры
 def main_keyboard():
@@ -37,7 +52,6 @@ def main_keyboard():
     ], [
         InlineKeyboardButton("🆘 Поддержка", url=f"https://t.me/{config.SUPPORT_ACCOUNT.replace('@', '')}")
     ]]
-
 
 def tariffs_keyboard():
     return [[
@@ -50,7 +64,6 @@ def tariffs_keyboard():
         InlineKeyboardButton("🔙 Назад", callback_data="back_to_main")
     ]]
 
-
 def payment_keyboard(tariff):
     return [[
         InlineKeyboardButton("🎁 DonationAlerts", callback_data=f"pay_donate_{tariff}"),
@@ -58,7 +71,6 @@ def payment_keyboard(tariff):
     ], [
         InlineKeyboardButton("🔙 Назад к тарифам", callback_data="back_to_tariffs")
     ]]
-
 
 async def send_vpn_instructions(user_id, tariff, vpn_link):
     """Отправляет инструкцию по установке VPN"""
@@ -96,7 +108,6 @@ async def send_vpn_instructions(user_id, tariff, vpn_link):
     except Exception as e:
         print(f"Ошибка отправки инструкции: {e}")
 
-
 @bot.on_message(filters.command("start"))
 async def start_command(client: Client, message: Message):
     user = message.from_user
@@ -115,7 +126,6 @@ async def start_command(client: Client, message: Message):
 🎯 **Выберите действие:**
     """
     await message.reply(welcome_text, reply_markup=InlineKeyboardMarkup(main_keyboard()))
-
 
 @bot.on_callback_query()
 async def handle_callbacks(client: Client, callback: CallbackQuery):
@@ -327,7 +337,6 @@ async def handle_callbacks(client: Client, callback: CallbackQuery):
         print(f"❌ Ошибка в обработчике колбэков: {e}")
         await callback.answer("❌ Произошла ошибка", show_alert=True)
 
-
 @bot.on_message(filters.command("issue") & filters.user([9690362]))
 async def manual_issue_vpn(client: Client, message: Message):
     """Ручная выдача VPN (только для админа)"""
@@ -368,7 +377,6 @@ async def manual_issue_vpn(client: Client, message: Message):
     except Exception as e:
         await message.reply(f"❌ Ошибка: {e}")
 
-
 @bot.on_message(filters.command("check_payments"))
 async def check_payments(client: Client, message: Message):
     """Проверить ожидающие платежи"""
@@ -399,7 +407,6 @@ async def check_payments(client: Client, message: Message):
 
     await message.reply(help_text)
 
-
 @bot.on_message(filters.command("stats"))
 async def show_stats(client: Client, message: Message):
     """Показать статистику бота"""
@@ -422,9 +429,14 @@ async def show_stats(client: Client, message: Message):
     except Exception as e:
         await message.reply(f"❌ Ошибка статистики: {e}")
 
-
 if __name__ == "__main__":
-    print("🚀 VPN бот запускается...")
+    print("🚀 VPN бот запускается как веб-сервис...")
+    
+    # Запускаем Flask в отдельном потоке
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+    
     try:
         bot.run()
     except Exception as e:
