@@ -1,41 +1,44 @@
 from flask import Flask
+from threading import Thread
 import os
-import subprocess
-import threading
+import asyncio
+from pyrogram import Client
+import config
 
 app = Flask(__name__)
 
+# Создаем клиент бота
+bot = Client(
+    "vpn_bot",
+    api_id=config.API_ID,
+    api_hash=config.API_HASH,
+    bot_token=config.BOT_TOKEN
+)
+
+# Запускаем бота в основном потоке
+def run_bot():
+    print("🚀 Запускаю Telegram бота...")
+    bot.run()
+
 @app.route('/')
 def home():
-    return "✅ VPN Telegram Bot is Running!"
-
-@app.route('/health')
-def health():
-    return "🟢 Bot is Healthy"
+    return "🤖 VPN Bot is running! | SnowBall VPN"
 
 @app.route('/ping')
 def ping():
     return "pong"
 
-# Запуск бота в отдельном процессе
-def run_bot():
-    print("🚀 Starting Telegram Bot in separate process...")
-    try:
-        subprocess.run(["python", "-c", """
-from main import bot
-print('🤖 Bot starting...')
-bot.run()
-print('🤖 Bot stopped')
-        """], check=True)
-    except Exception as e:
-        print(f"❌ Bot error: {e}")
+@app.route('/health')
+def health():
+    return "OK"
 
+# Запускаем Flask и бота
 if __name__ == "__main__":
     # Запускаем бота в отдельном потоке
-    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    bot_thread = Thread(target=run_bot)
+    bot_thread.daemon = True
     bot_thread.start()
     
-    # Запускаем веб-сервер
-    port = int(os.environ.get("PORT", 10000))
-    print(f"🌐 Web server starting on port {port}")
-    app.run(host='0.0.0.0', port=port)
+    # Запускаем Flask
+    print("🌐 Web server starting on port 10000")
+    app.run(host='0.0.0.0', port=10000, debug=False)
