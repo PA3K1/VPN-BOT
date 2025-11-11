@@ -5,6 +5,8 @@ BOT_TOKEN = '8405506760:AAF7kkadB2quVcGQp0yRCOTQ-611GklzWf8'
 YOOMONEY_WALLET = "4100119406790630"
 BOT_USERNAME = "SnowBall_VPN_Bot"
 
+DONATION_ALERTS_PAGE = "https://www.donationalerts.com/r/pazk"
+
 PRICES = {
     "1_month": 199,
     "3_months": 499,
@@ -13,7 +15,7 @@ PRICES = {
 
 VPN_LINKS = {
     "1_month": "https://sub.snowfall.top/bxMHd7z0JHfB2dwK",
-    "3_months": "https://sub.snowfall.top/bxMHd7z0JHfB2dwK",
+    "3_months": "https://sub.snowfall.top/bxMHd7z0JHfB2dwK", 
     "1_year": "https://sub.snowfall.top/bxMHd7z0JHfB2dwK"
 }
 
