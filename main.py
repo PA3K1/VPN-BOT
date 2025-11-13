@@ -408,7 +408,7 @@ def run_bot():
 if __name__ == "__main__":
     print("🤖 Starting VPN Bot with Web Service...")
     
-    # Запускаем Flask в отдельном потоке
+    # Запускаем Flask в отдельном потоке0
     flask_thread = threading.Thread(target=run_flask, daemon=True)
     flask_thread.start()
     
